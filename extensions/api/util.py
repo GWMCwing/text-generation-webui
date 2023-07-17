@@ -62,8 +62,15 @@ def build_parameters(body, chat=False):
         instruction_template = body.get('instruction_template', shared.settings['instruction_template'])
         if str(instruction_template) == "None":
             instruction_template = "Vicuna-v1.1"
-
-        name1, name2, _, greeting, context, _ = load_character_memoized(character, str(body.get('your_name', shared.settings['name1'])), shared.settings['name2'], instruct=False)
+        # 
+        if(character == "None"):
+            name1 = body.get('character_name1')
+            name2 =  body.get('character_name2')
+            greeting = body.get('character_greeting')
+            context = body.get('character_context')
+        else:
+            name1, name2, _, greeting, context, _ = load_character_memoized(character, str(body.get('your_name', shared.settings['name1'])), shared.settings['name2'], instruct=False)
+        
         name1_instruct, name2_instruct, _, _, context_instruct, turn_template = load_character_memoized(instruction_template, '', '', instruct=True)
         generate_params.update({
             'stop_at_newline': bool(body.get('stop_at_newline', shared.settings['stop_at_newline'])),
